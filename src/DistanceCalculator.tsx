@@ -8,20 +8,23 @@ const DistanceCalculator: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const getLocationAndCalculateDistance = () => {
+    console.log("hi im in calc");
+    console.log("navigator.geolocation", navigator.geolocation);
     if (navigator.geolocation) {
+      console.log("if (navigator.geolocation) ");
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           setLoading(true);
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           const origins = `${lat},${lng}`;
-          const destinations = "51.165691,10.451526"; // Your destination coordinates
+          const destinations = "35.714735,51.427892"; // Your destination coordinates
           const apiKey = "service.b2ed0b63a3354338a846fa8d5df8274b"; // Replace with your actual API key
-
+          console.log("origins", origins);
 
           try {
             const response = await axios.get(
-              `https://api.neshan.org/v1/distance-matrix`, // Updated URL
+              `https://api.neshan.org/v1/distance-matrix`,
               {
                 params: {
                   type: "car",
@@ -34,7 +37,8 @@ const DistanceCalculator: React.FC = () => {
               }
             );
 
-            const distanceValue = response.data.rows[0].elements[0].distance.value; // Assuming you get distance in meters
+            const distanceValue =
+              response.data.rows[0].elements[0].distance.value; // Assuming you get distance in meters
             setDistance(distanceValue);
             setError(null);
           } catch (err) {
@@ -63,7 +67,8 @@ const DistanceCalculator: React.FC = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
       {distance !== null && (
         <div>
-          <DistanceGauge distance={distance} /> {/* Pass the distance to the gauge */}
+          <DistanceGauge distance={distance} />{" "}
+          {/* Pass the distance to the gauge */}
         </div>
       )}
     </div>
